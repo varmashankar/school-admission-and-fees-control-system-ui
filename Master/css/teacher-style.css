@@ -1,0 +1,47 @@
+﻿/* Sidebar */
+:root {
+    --sidebar-w: 16rem;
+    --sidebar-w-collapsed: 5rem;
+}
+
+.app-sidebar {
+    width: var(--sidebar-w);
+}
+
+.app-main {
+    margin-left: var(--sidebar-w);
+}
+
+/* Scrollbar */
+.app-sidebar nav::-webkit-scrollbar {
+    width: 6px;
+}
+
+.app-sidebar nav::-webkit-scrollbar-thumb {
+    background: #4b5563; /* gray-600 */
+    border-radius: 4px;
+}
+
+/* Collapse hide labels */
+body.sidebar-collapsed .sidebar-label {
+    display: none;
+}
+
+/* Active link */
+.sidebar-link.active {
+    background-color: #166534; /* green */
+    color: #fff;
+}
+
+    .sidebar-link.active i {
+        color: #fff;
+    }
+
+/* Submenu animation */
+.submenu .submenu-items {
+    overflow: hidden;
+}
+
+.submenu-btn .submenu-icon {
+    transition: transform 0.3s;
+}

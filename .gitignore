@@ -1,0 +1,35 @@
+# Visual Studio / WebForms (.NET Framework)
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.cache
+*.log
+
+# IIS / publish artifacts
+*.Publish.xml
+*.pubxml
+*.publishproj
+PublishProfiles/
+
+# NuGet packages
+# If using packages.config and a local packages folder, you can keep the next line commented
+# packages/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Frontend build output (common)
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
