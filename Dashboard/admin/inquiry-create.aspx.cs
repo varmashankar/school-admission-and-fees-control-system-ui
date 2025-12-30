@@ -35,12 +35,20 @@ public partial class Dashboard_admin_inquiry_create : System.Web.UI.Page
             {
                 foreach (var x in InquiryCaptureHelper.DeserializeList(classRes.obj))
                 {
-                    object v;
-                    object n;
+                    object v, n, s;
                     var id = x.TryGetValue("id", out v) ? Convert.ToString(v) : null;
-                    var name = x.TryGetValue("className", out n) ? Convert.ToString(n) : (x.TryGetValue("class_name", out n) ? Convert.ToString(n) : null);
-                    if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(name))
-                        ddlClass.Items.Add(new ListItem(name, id));
+                    var className = x.TryGetValue("className", out n) ? Convert.ToString(n) : (x.TryGetValue("class_name", out n) ? Convert.ToString(n) : null);
+                    var section = x.TryGetValue("section", out s) ? Convert.ToString(s) : null;
+                    
+                    // Combine className and section for display
+                    var displayName = className;
+                    if (!string.IsNullOrWhiteSpace(section))
+                    {
+                        displayName = className + " - " + section;
+                    }
+                    
+                    if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(displayName))
+                        ddlClass.Items.Add(new System.Web.UI.WebControls.ListItem(displayName, id));
                 }
             }
 
@@ -49,18 +57,18 @@ public partial class Dashboard_admin_inquiry_create : System.Web.UI.Page
             {
                 foreach (var x in InquiryCaptureHelper.DeserializeList(streamRes.obj))
                 {
-                    object v;
-                    object n;
+                    object v, n;
                     var id = x.TryGetValue("id", out v) ? Convert.ToString(v) : null;
                     var name = x.TryGetValue("streamName", out n) ? Convert.ToString(n) : (x.TryGetValue("stream_name", out n) ? Convert.ToString(n) : null);
                     if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(name))
-                        ddlStream.Items.Add(new ListItem(name, id));
+                        ddlStream.Items.Add(new System.Web.UI.WebControls.ListItem(name, id));
                 }
             }
         }
         catch (Exception ex)
         {
             lblInfo.Text = "Error loading dropdowns: " + ex.Message;
+            lblInfo.CssClass = "text-danger small";
         }
     }
 
@@ -84,50 +92,73 @@ public partial class Dashboard_admin_inquiry_create : System.Web.UI.Page
         return true;
     }
 
+    private async System.Threading.Tasks.Task<bool> SaveInquiryAsync()
+    {
+        string message;
+        if (!ValidateRequired(out message))
+        {
+            message = message.Replace("'", "\\'");
+            ScriptManager.RegisterStartupScript(this, GetType(), "bad", "Swal.fire('ERROR','" + message + "','error');", true);
+            return false;
+        }
+
+        var payload = new
+        {
+            id = (long?)null,
+            inquiryNo = (string)null,
+            firstName = InquiryCaptureHelper.Require(txtFirstName.Text),
+            lastName = InquiryCaptureHelper.Require(txtLastName.Text),
+            phone = InquiryCaptureHelper.RequirePhone(txtPhone.Text),
+            email = InquiryCaptureHelper.Require(txtEmail.Text),
+            classId = InquiryCaptureHelper.ParseLong(ddlClass.SelectedValue),
+            streamId = InquiryCaptureHelper.ParseLong(ddlStream.SelectedValue),
+            source = InquiryCaptureHelper.Require(txtSource.Text),
+            notes = InquiryCaptureHelper.Require(txtNotes.Text),
+            status = "NEW",
+            nextFollowUpAt = InquiryCaptureHelper.ParseDateTimeLocal(txtNextFollowUpAt.Text),
+            convertedStudentId = (long?)null,
+            createdById = (long?)null,
+            roleId = (long?)null
+        };
+
+        var res = await ApiHelper.PostAsync("api/Inquiries/saveInquiry", payload, HttpContext.Current);
+        if (res != null && res.response_code == "200")
+        {
+            return true;
+        }
+
+        var err = (res != null && res.obj != null) ? res.obj.ToString() : "Failed to save inquiry.";
+        err = err.Replace("'", "\\'");
+        ScriptManager.RegisterStartupScript(this, GetType(), "err", "Swal.fire('ERROR','" + err + "','error');", true);
+        return false;
+    }
+
     protected void btnSave_Click(object sender, EventArgs e)
     {
         RegisterAsyncTask(new PageAsyncTask(async () =>
         {
-            string message;
-            if (!ValidateRequired(out message))
+            var success = await SaveInquiryAsync();
+            if (success)
             {
-                message = message.Replace("'", "\\'");
-                ScriptManager.RegisterStartupScript(this, GetType(), "bad", "Swal.fire('ERROR','" + message + "','error');", true);
-                return;
+                // Redirect to inquiries list after successful save
+                ScriptManager.RegisterStartupScript(this, GetType(), "ok", 
+                    "Swal.fire({icon:'success',title:'SUCCESS',text:'Inquiry saved successfully.',confirmButtonColor:'#6366f1'}).then(function(){window.location.href='inquiries.aspx';});", true);
             }
+        }));
+    }
 
-            var payload = new
+    protected void btnSaveAndNew_Click(object sender, EventArgs e)
+    {
+        RegisterAsyncTask(new PageAsyncTask(async () =>
+        {
+            var success = await SaveInquiryAsync();
+            if (success)
             {
-                id = (long?)null,
-                inquiryNo = (string)null,
-                firstName = InquiryCaptureHelper.Require(txtFirstName.Text),
-                lastName = InquiryCaptureHelper.Require(txtLastName.Text),
-                phone = InquiryCaptureHelper.RequirePhone(txtPhone.Text),
-                email = InquiryCaptureHelper.Require(txtEmail.Text),
-                classId = InquiryCaptureHelper.ParseLong(ddlClass.SelectedValue),
-                streamId = InquiryCaptureHelper.ParseLong(ddlStream.SelectedValue),
-                source = InquiryCaptureHelper.Require(txtSource.Text),
-                notes = InquiryCaptureHelper.Require(txtNotes.Text),
-                status = "NEW",
-                nextFollowUpAt = InquiryCaptureHelper.ParseDateTimeLocal(txtNextFollowUpAt.Text),
-                convertedStudentId = (long?)null,
-                createdById = (long?)null,
-                roleId = (long?)null
-            };
-
-            var res = await ApiHelper.PostAsync("api/Inquiries/saveInquiry", payload, HttpContext.Current);
-            if (res != null && res.response_code == "200")
-            {
-                var msg = (res.obj == null ? "Inquiry saved." : res.obj.ToString()).Replace("'", "\\'");
-                ScriptManager.RegisterStartupScript(this, GetType(), "ok", "Swal.fire('SUCCESS','" + msg + "','success');", true);
-
+                // Clear form and stay on page for new entry
                 ClearForm(keepDefaults: true);
-                return;
+                ScriptManager.RegisterStartupScript(this, GetType(), "ok", 
+                    "Swal.fire({icon:'success',title:'SUCCESS',text:'Inquiry saved. You can now create another.',confirmButtonColor:'#6366f1'});", true);
             }
-
-            var err = (res != null && res.obj != null) ? res.obj.ToString() : "Failed to save inquiry.";
-            err = err.Replace("'", "\\'");
-            ScriptManager.RegisterStartupScript(this, GetType(), "err", "Swal.fire('ERROR','" + err + "','error');", true);
         }));
     }
 

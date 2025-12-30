@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 
 public partial class Dashboard_admin_accountability_dashboard : AuthenticatedPage
 {
@@ -23,6 +24,112 @@ public partial class Dashboard_admin_accountability_dashboard : AuthenticatedPag
     {
         await LoadAll();
     }
+
+    #region Helper Methods for GridView
+
+    protected string GetOverdueBadgeClass(object overdueCount)
+    {
+        int count = 0;
+        if (overdueCount != null)
+            int.TryParse(overdueCount.ToString(), out count);
+
+        if (count == 0) return "badge-status badge-success";
+        if (count <= 5) return "badge-status badge-warning";
+        return "badge-status badge-overdue";
+    }
+
+    protected string GetDaysOverdueClass(object daysOverdue)
+    {
+        int days = 0;
+        if (daysOverdue != null)
+            int.TryParse(daysOverdue.ToString(), out days);
+
+        if (days <= 3) return "days-overdue normal";
+        if (days <= 7) return "days-overdue warning";
+        return "days-overdue critical";
+    }
+
+    protected string GetAmountClass(object amount)
+    {
+        decimal val = 0;
+        if (amount != null)
+            decimal.TryParse(amount.ToString(), out val);
+
+        if (val >= 10000) return "amount large";
+        return "amount";
+    }
+
+    protected string GetReminderBadgeClass(object status)
+    {
+        string s = status != null ? status.ToString().ToLower() : "";
+        if (s.Contains("sent") || s.Contains("success")) return "badge-status badge-success";
+        if (s.Contains("pending")) return "badge-status badge-warning";
+        if (s.Contains("failed")) return "badge-status badge-overdue";
+        return "badge-status badge-neutral";
+    }
+
+    protected string FormatDateTime(object dateTime)
+    {
+        if (dateTime == null || string.IsNullOrWhiteSpace(dateTime.ToString()))
+            return "<span class='text-muted'>-</span>";
+
+        DateTime dt;
+        if (DateTime.TryParse(dateTime.ToString(), out dt))
+        {
+            string dateStr = dt.ToString("dd MMM yyyy");
+            string timeStr = dt.ToString("hh:mm tt");
+            return string.Format("<span class='d-block'>{0}</span><small class='text-muted'>{1}</small>", dateStr, timeStr);
+        }
+        return dateTime.ToString();
+    }
+
+    protected string FormatAmount(object amount)
+    {
+        if (amount == null) return "0.00";
+        decimal val;
+        if (decimal.TryParse(amount.ToString(), out val))
+            return val.ToString("N2");
+        return amount.ToString();
+    }
+
+    protected void gvStaff_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        // Additional row customization if needed
+    }
+
+    protected void gvMissed_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            // Highlight critical rows
+            object daysOverdue = DataBinder.Eval(e.Row.DataItem, "daysOverdue");
+            int days = 0;
+            if (daysOverdue != null)
+                int.TryParse(daysOverdue.ToString(), out days);
+
+            if (days > 7)
+                e.Row.Style["background"] = "linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)";
+        }
+    }
+
+    protected void gvFeeDelays_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            // Highlight critical rows
+            object daysOverdue = DataBinder.Eval(e.Row.DataItem, "daysOverdue");
+            int days = 0;
+            if (daysOverdue != null)
+                int.TryParse(daysOverdue.ToString(), out days);
+
+            if (days > 30)
+                e.Row.Style["background"] = "linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)";
+        }
+    }
+
+    #endregion
+
+    #region Initialization
 
     private void InitDefaultDates()
     {
@@ -77,7 +184,7 @@ public partial class Dashboard_admin_accountability_dashboard : AuthenticatedPag
         {
             var res = await ApiHelper.PostAsync("api/AcademicYear/getAcademicYearList", new { }, HttpContext.Current);
             ddlAcademicYear.Items.Clear();
-            ddlAcademicYear.Items.Add(new System.Web.UI.WebControls.ListItem("-- All --", ""));
+            ddlAcademicYear.Items.Add(new ListItem("-- All --", ""));
 
             if (res != null && res.response_code == "200")
             {
@@ -89,7 +196,7 @@ public partial class Dashboard_admin_accountability_dashboard : AuthenticatedPag
                     string id = Convert.ToString(y.id);
                     string code = Convert.ToString(y.yearCode);
                     if (string.IsNullOrWhiteSpace(code)) code = id;
-                    ddlAcademicYear.Items.Add(new System.Web.UI.WebControls.ListItem(code, id));
+                    ddlAcademicYear.Items.Add(new ListItem(code, id));
                 }
             }
         }
@@ -98,6 +205,10 @@ public partial class Dashboard_admin_accountability_dashboard : AuthenticatedPag
             // ignore; still allow dashboard to load
         }
     }
+
+    #endregion
+
+    #region Data Loading
 
     private async Task LoadAll()
     {
@@ -129,12 +240,14 @@ public partial class Dashboard_admin_accountability_dashboard : AuthenticatedPag
         var json = JsonConvert.SerializeObject(res.obj);
         var rawList = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(json) ?? new List<Dictionary<string, object>>();
 
-        var dt = new System.Data.DataTable();
+        var dt = new DataTable();
         dt.Columns.Add("staffId");
         dt.Columns.Add("staffName");
         dt.Columns.Add("dueFollowUps");
         dt.Columns.Add("overdueFollowUps");
         dt.Columns.Add("lastFollowUpAt");
+
+        int totalOverdue = 0;
 
         foreach (var x in rawList)
         {
@@ -150,11 +263,21 @@ public partial class Dashboard_admin_accountability_dashboard : AuthenticatedPag
             if (r["staffName"] == null || string.IsNullOrWhiteSpace(Convert.ToString(r["staffName"])))
                 r["staffName"] = "All Staff";
 
+            // Sum up overdue
+            int overdue = 0;
+            if (r["overdueFollowUps"] != null)
+                int.TryParse(r["overdueFollowUps"].ToString(), out overdue);
+            totalOverdue += overdue;
+
             dt.Rows.Add(r);
         }
 
         gvStaff.DataSource = dt;
         gvStaff.DataBind();
+
+        // Update stats
+        litTotalStaff.Text = rawList.Count.ToString();
+        litTotalOverdue.Text = totalOverdue.ToString();
     }
 
     private async Task LoadMissedInquiries(object filter)
@@ -210,6 +333,9 @@ public partial class Dashboard_admin_accountability_dashboard : AuthenticatedPag
 
         gvMissed.DataSource = dt;
         gvMissed.DataBind();
+
+        // Update stats
+        litMissedInquiries.Text = rows.Count.ToString();
     }
 
     private async Task LoadAdmissionLossReasons(object filter)
@@ -234,5 +360,10 @@ public partial class Dashboard_admin_accountability_dashboard : AuthenticatedPag
         var rows = JsonConvert.DeserializeObject<List<dynamic>>(json);
         gvFeeDelays.DataSource = rows;
         gvFeeDelays.DataBind();
+
+        // Update stats
+        litFeeDelays.Text = (rows != null ? rows.Count : 0).ToString();
     }
+
+    #endregion
 }

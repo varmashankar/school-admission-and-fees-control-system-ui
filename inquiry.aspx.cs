@@ -25,12 +25,20 @@ public partial class inquiry : System.Web.UI.Page
             {
                 foreach (var x in InquiryCaptureHelper.DeserializeList(classRes.obj))
                 {
-                    object v;
-                    object n;
+                    object v, n, s;
                     var id = x.TryGetValue("id", out v) ? Convert.ToString(v) : null;
-                    var name = x.TryGetValue("className", out n) ? Convert.ToString(n) : (x.TryGetValue("class_name", out n) ? Convert.ToString(n) : null);
-                    if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(name))
-                        ddlClass.Items.Add(new ListItem(name, id));
+                    var className = x.TryGetValue("className", out n) ? Convert.ToString(n) : (x.TryGetValue("class_name", out n) ? Convert.ToString(n) : null);
+                    var section = x.TryGetValue("section", out s) ? Convert.ToString(s) : null;
+                    
+                    // Combine className and section for display
+                    var displayName = className;
+                    if (!string.IsNullOrWhiteSpace(section))
+                    {
+                        displayName = className + " - " + section;
+                    }
+                    
+                    if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(displayName))
+                        ddlClass.Items.Add(new System.Web.UI.WebControls.ListItem(displayName, id));
                 }
             }
 
@@ -44,7 +52,7 @@ public partial class inquiry : System.Web.UI.Page
                     var id = x.TryGetValue("id", out v) ? Convert.ToString(v) : null;
                     var name = x.TryGetValue("streamName", out n) ? Convert.ToString(n) : (x.TryGetValue("stream_name", out n) ? Convert.ToString(n) : null);
                     if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(name))
-                        ddlStream.Items.Add(new ListItem(name, id));
+                        ddlStream.Items.Add(new System.Web.UI.WebControls.ListItem(name, id));
                 }
             }
         }
