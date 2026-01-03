@@ -43,7 +43,29 @@ public partial class _Default : System.Web.UI.Page
 
                             if (!string.IsNullOrEmpty(logo))
                             {
-                                imgLogo.ImageUrl = logo;
+                                // Normalize stored path to an app-relative path if needed and resolve it
+                                string appRelative = logo;
+                                if (!logo.StartsWith("~") && logo.StartsWith("/"))
+                                {
+                                    appRelative = "~" + logo; // "/uploads/schools/x.png" -> "~/uploads/schools/x.png"
+                                }
+                                // If logo is missing a leading slash and does not have a ~, assume it's already app-relative
+                                try
+                                {
+                                    imgLogo.ImageUrl = ResolveUrl(appRelative);
+                                }
+                                catch
+                                {
+                                    // fallback to placeholder
+                                    imgLogo.ImageUrl = "https://via.placeholder.com/64x64?text=W";
+                                }
+
+                                imgLogo.AlternateText = name;
+                            }
+                            else
+                            {
+                                // fallback placeholder when no logo configured
+                                imgLogo.ImageUrl = "https://via.placeholder.com/64x64?text=W";
                                 imgLogo.AlternateText = name;
                             }
 

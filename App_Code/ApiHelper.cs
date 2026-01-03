@@ -85,18 +85,36 @@ public static class ApiHelper
 
             string respStr = response.Content == null ? null : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            ApiResponse apiResp;
+            ApiResponse apiResp = null;
             try
             {
+                // try to deserialize standard ApiResponse payload
                 apiResp = JsonConvert.DeserializeObject<ApiResponse>(respStr);
             }
             catch
             {
+                // ignore deserialization errors
+                apiResp = null;
+            }
+
+            // If deserialization failed or returned incomplete fields, populate fallback info
+            if (apiResp == null)
+            {
                 apiResp = new ApiResponse
                 {
                     response_code = response.IsSuccessStatusCode ? "200" : ((int)response.StatusCode).ToString(),
-                    obj = respStr
+                    obj = string.IsNullOrEmpty(respStr) ? (object)null : respStr
                 };
+            }
+            else
+            {
+                // ensure response_code is always set
+                if (string.IsNullOrWhiteSpace(apiResp.response_code))
+                    apiResp.response_code = response.IsSuccessStatusCode ? "200" : ((int)response.StatusCode).ToString();
+
+                // if obj is null but we have raw response, set obj to raw string for debugging
+                if (apiResp.obj == null && !string.IsNullOrEmpty(respStr))
+                    apiResp.obj = respStr;
             }
 
             // If API indicates auth/access problems, clear token centrally

@@ -23,13 +23,16 @@
         
         body {
             font-family: 'Inter', sans-serif;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
+            min-height: 100vh;
         }
         
         .main-container {
             position: relative;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            min-height: 100vh;
+            padding: 20px 15px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             display: flex;
             align-items: center;
@@ -114,11 +117,11 @@
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-radius: 30px;
+            border-radius: 24px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            padding: 50px 45px;
-            width: 450px;
+            padding: 35px 40px;
+            width: 420px;
             max-width: 90vw;
             animation: slide-up 0.8s ease-out;
             z-index: 10;
@@ -137,14 +140,14 @@
         
         .logo-container {
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 25px;
             animation: fade-in 1s ease-out 0.3s both;
         }
         
         .logo-wrapper {
             position: relative;
             display: inline-block;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
         
         .logo-glow {
@@ -152,8 +155,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 120px;
-            height: 120px;
+            width: 90px;
+            height: 90px;
             background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
             border-radius: 50%;
             animation: pulse-glow 3s ease-in-out infinite;
@@ -166,62 +169,65 @@
         
         .logo-img {
             position: relative;
-            width: 90px;
-            height: 90px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
-            padding: 15px;
+            padding: 12px;
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
-            animation: rotate-subtle 20s linear infinite;
-        }
-        
-        @keyframes rotate-subtle {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
         }
         
         .title {
             color: white;
-            font-size: 32px;
+            font-size: 26px;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         
         .subtitle {
             color: rgba(255, 255, 255, 0.8);
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 400;
         }
         
         .input-group {
             position: relative;
-            margin-bottom: 25px;
+            margin-bottom: 18px;
             animation: fade-in 1s ease-out 0.5s both;
+        }
+
+        .input-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 6px;
         }
         
         .input-wrapper {
             position: relative;
+            display: flex;
+            align-items: center;
         }
         
         .input-icon {
             position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
+            left: 14px;
             color: rgba(255, 255, 255, 0.6);
-            font-size: 20px;
-            transition: all 0.3s ease;
+            font-size: 18px;
+            transition: color 0.3s ease;
+            pointer-events: none;
         }
         
         .form-input {
             width: 100%;
-            padding: 16px 18px 16px 52px;
+            padding: 12px 44px 12px 44px;
             background: rgba(255, 255, 255, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
+            border-radius: 12px;
             color: white;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 400;
             outline: none;
             transition: all 0.3s ease;
@@ -237,17 +243,35 @@
             border-color: rgba(255, 255, 255, 0.4);
             box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
         }
-        
-        .form-input:focus + .input-icon {
+
+        .form-input:focus ~ .input-icon {
             color: white;
-            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Password toggle */
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-password:hover,
+        .toggle-password:focus {
+            color: white;
+            outline: none;
         }
         
         .remember-forgot {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             animation: fade-in 1s ease-out 0.6s both;
         }
         
@@ -255,19 +279,49 @@
             display: flex;
             align-items: center;
             color: rgba(255, 255, 255, 0.9);
-            font-size: 14px;
+            font-size: 13px;
+            cursor: pointer;
+            gap: 8px;
         }
-        
+
+        /* Custom checkbox */
         .remember-me input[type="checkbox"] {
-            margin-right: 8px;
+            appearance: none;
+            -webkit-appearance: none;
             width: 18px;
             height: 18px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
             cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .remember-me input[type="checkbox"]:checked {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .remember-me input[type="checkbox"]:checked::after {
+            content: '\2713';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .remember-me input[type="checkbox"]:focus {
+            outline: 2px solid rgba(255, 255, 255, 0.4);
+            outline-offset: 2px;
         }
         
         .forgot-link {
             color: rgba(255, 255, 255, 0.9);
-            font-size: 14px;
+            font-size: 13px;
             text-decoration: none;
             transition: all 0.3s ease;
         }
@@ -276,15 +330,21 @@
             color: white;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
+
+        .forgot-link:focus {
+            outline: 2px solid rgba(255, 255, 255, 0.4);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
         
         .btn-login {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
             color: #667eea;
             border: none;
-            border-radius: 15px;
-            font-size: 16px;
+            border-radius: 12px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.4s ease;
@@ -320,6 +380,11 @@
         .btn-login:active {
             transform: translateY(0);
         }
+
+        .btn-login:focus {
+            outline: 2px solid rgba(255, 255, 255, 0.6);
+            outline-offset: 2px;
+        }
         
         .btn-text {
             position: relative;
@@ -328,11 +393,11 @@
         
         .footer-text {
             text-align: center;
-            margin-top: 30px;
-            padding-top: 25px;
+            margin-top: 20px;
+            padding-top: 18px;
             border-top: 1px solid rgba(255, 255, 255, 0.2);
             color: rgba(255, 255, 255, 0.7);
-            font-size: 13px;
+            font-size: 12px;
             animation: fade-in 1s ease-out 0.8s both;
         }
         
@@ -343,17 +408,32 @@
         
         /* Responsive */
         @media (max-width: 768px) {
+            .main-container {
+                padding: 20px 10px;
+            }
+
             .glass-card {
-                padding: 40px 30px;
+                padding: 30px 25px;
             }
             
             .title {
-                font-size: 26px;
+                font-size: 22px;
             }
             
             .logo-img {
-                width: 70px;
-                height: 70px;
+                width: 60px;
+                height: 60px;
+            }
+
+            .logo-glow {
+                width: 80px;
+                height: 80px;
+            }
+
+            .remember-forgot {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
             }
         }
         
@@ -386,45 +466,38 @@
     </style>
 </head>
 <body>
-    <div class="main-container">
+    <div class="main-container" id="mainContainer">
         <!-- Animated orbs -->
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
         <div class="orb orb-3"></div>
         
-        <!-- Particle system -->
-        <script>
-            for (let i = 0; i < 30; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + 'vw';
-                particle.style.animationDelay = Math.random() * 15 + 's';
-                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
-                document.querySelector('.main-container').appendChild(particle);
-            }
-        </script>
-        
         <form id="form1" runat="server" class="glass-card">
             <div class="logo-container">
                 <div class="logo-wrapper">
                     <div class="logo-glow"></div>
-                    <img src="assets/images/education.gif" alt="ERP-SCHOOL" class="logo-img" />
+                    <img src="assets/images/education.gif" alt="ERP-SCHOOL Logo" class="logo-img" />
                 </div>
                 <h1 class="title">Welcome Back</h1>
                 <p class="subtitle">Sign in to your teacher portal</p>
             </div>
             
             <div class="input-group">
+                <label for="<%= txtUsername.ClientID %>">Email or Mobile Number</label>
                 <div class="input-wrapper">
-                    <asp:TextBox ID="txtUsername" runat="server" placeholder="Email or Mobile Number" CssClass="form-input" autocomplete="username" />
-                    <i class="bi bi-person-circle input-icon"></i>
+                    <asp:TextBox ID="txtUsername" runat="server" placeholder="Enter your email or mobile" CssClass="form-input" autocomplete="username" required="required" />
+                    <i class="bi bi-person-circle input-icon" aria-hidden="true"></i>
                 </div>
             </div>
             
             <div class="input-group">
+                <label for="<%= txtPassword.ClientID %>">Password</label>
                 <div class="input-wrapper">
-                    <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" placeholder="Password" CssClass="form-input" autocomplete="current-password" />
-                    <i class="bi bi-lock-fill input-icon"></i>
+                    <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" placeholder="Enter your password" CssClass="form-input" autocomplete="current-password" required="required" />
+                    <i class="bi bi-lock-fill input-icon" aria-hidden="true"></i>
+                    <button type="button" class="toggle-password" aria-label="Show password" onclick="togglePassword()">
+                        <i class="bi bi-eye" id="toggleIcon"></i>
+                    </button>
                 </div>
             </div>
             
@@ -436,13 +509,57 @@
                 <a href="forgotpassword.aspx" class="forgot-link">Forgot Password?</a>
             </div>
             
-            <asp:Button ID="btnLogin" runat="server" CssClass="btn-login" OnClick="btnLogin_Click" OnClientClick="this.classList.add('loading'); return true;" Text="Sign In">
-            </asp:Button>
+            <asp:Button ID="btnLogin" runat="server" CssClass="btn-login" OnClick="btnLogin_Click" OnClientClick="setLoading(); return true;" Text="Sign In" />
             
             <div class="footer-text">
                 &copy; <%= DateTime.Now.Year %> LOGICAL WAVE. All rights reserved.
             </div>
         </form>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Create particles after container exists
+            var container = document.getElementById('mainContainer');
+            for (var i = 0; i < 30; i++) {
+                var particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        });
+
+        // Password toggle
+        function togglePassword() {
+            var pwdField = document.getElementById('<%= txtPassword.ClientID %>');
+            var icon = document.getElementById('toggleIcon');
+            var btn = icon.parentElement;
+            if (pwdField.type === 'password') {
+                pwdField.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+                btn.setAttribute('aria-label', 'Hide password');
+            } else {
+                pwdField.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+                btn.setAttribute('aria-label', 'Show password');
+            }
+        }
+
+        // Loading state management
+        function setLoading() {
+            var btn = document.getElementById('<%= btnLogin.ClientID %>');
+            btn.classList.add('loading');
+        }
+
+        // Reset loading state on page load (e.g., validation failed postback)
+        window.addEventListener('load', function () {
+            var btn = document.getElementById('<%= btnLogin.ClientID %>');
+            btn.classList.remove('loading');
+        });
+    </script>
 </body>
 </html>

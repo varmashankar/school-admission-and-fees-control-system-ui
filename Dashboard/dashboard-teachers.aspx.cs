@@ -14,8 +14,6 @@ public partial class Dashboard_dashboard_teachers : AuthenticatedPage
     {
         if (!IsPostBack)
         {
-            lblLastUpdated.Text = DateTime.Now.ToString("dd MMM yyyy, hh:mm tt");
-            
             // Get teacher name from session
             if (Session["userName"] != null)
                 lblTeacherName.Text = Session["userName"].ToString();

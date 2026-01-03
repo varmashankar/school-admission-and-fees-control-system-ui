@@ -40,8 +40,9 @@ public partial class Dashboard_admin_addnewschool : System.Web.UI.Page
                 {
                     string ext = Path.GetExtension(fuLogo.FileName);
                     string fileName = Guid.NewGuid().ToString() + ext;
+                    // Save into uploads/schools folder and create it if missing
                     string folder = Server.MapPath("~/uploads/schools/");
-                    if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+                    Directory.CreateDirectory(folder);
                     string fullPath = Path.Combine(folder, fileName);
                     fuLogo.SaveAs(fullPath);
                     logoPath = "/uploads/schools/" + fileName;
@@ -75,7 +76,17 @@ public partial class Dashboard_admin_addnewschool : System.Web.UI.Page
             }
             else
             {
-                string msg = res != null && res.obj != null ? res.obj.ToString() : "Failed to save school.";
+                // Provide detailed info for debugging
+                string apiCode = res == null ? "(no response)" : (res.response_code ?? "(no code)");
+                string apiObj = "(null)";
+                try
+                {
+                    if (res != null && res.obj != null)
+                        apiObj = JsonConvert.SerializeObject(res.obj);
+                }
+                catch { apiObj = "(serialize failed)"; }
+
+                string msg = "Failed to save school. API returned: " + apiCode + " - " + apiObj;
                 ShowMessage(msg, "danger");
             }
         }
@@ -100,8 +111,9 @@ public partial class Dashboard_admin_addnewschool : System.Web.UI.Page
         if (type == "warning") icon = "warning";
         if (type == "success") icon = "success";
 
+        string key = "alert_" + Guid.NewGuid().ToString("N");
         string script = "Swal.fire('" + message + "', '', '" + icon + "');";
 
-        ClientScript.RegisterStartupScript(this.GetType(), "alert", script, true);
+        ClientScript.RegisterStartupScript(this.GetType(), key, script, true);
     }
 }

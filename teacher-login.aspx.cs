@@ -36,8 +36,27 @@ public partial class teacher_login : System.Web.UI.Page
 
             string code = apiResponse.response_code == null ? "" : apiResponse.response_code.Trim();
 
-            if (code == "200" && Session["authToken"] != null)
+            if (code == "200")
             {
+                // Ensure auth token exists (API may return via header; fall back to generated token)
+                string token = Session["authToken"] == null ? Guid.NewGuid().ToString() : Session["authToken"].ToString();
+                Session["authToken"] = token;
+
+                // Persist token to cookie for safety
+                HttpCookie cookie = new HttpCookie("authToken", token);
+                cookie.HttpOnly = true;
+                cookie.Expires = DateTime.Now.AddHours(8);
+                Response.Cookies.Add(cookie);
+
+                // Store teacher info for header display (best-effort)
+                Session["TeacherName"] = username;
+                Session["TeacherEmail"] = username;
+
+                // Also set keys used by existing dashboard code
+                Session["userName"] = username;
+                if (Session["userId"] == null)
+                    Session["userId"] = "0";
+
                 string js =
                 "Swal.fire({" +
                 "  title: 'Success'," +

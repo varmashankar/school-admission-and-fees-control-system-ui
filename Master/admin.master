@@ -59,6 +59,13 @@
                     <a href="/Dashboard/dashboard-admin.aspx" class="sidebar-link" data-bs-toggle="tooltip" title="Dashboard"><i class="bi bi-speedometer2"></i><span class="sidebar-label">Dashboard</span></a>
                 </div>
 
+                <!-- School Management -->
+                <div>
+                    <p class="text-uppercase small fw-bold text-gray-500 px-2 mt-2 mb-2">School Management</p>
+                    <a href="/Dashboard/admin/schools.aspx" class="sidebar-link" data-bs-toggle="tooltip" title="Schools"><i class="bi bi-building"></i><span class="sidebar-label">Schools</span></a>
+                    <a href="/Dashboard/admin/addnewschool.aspx" class="sidebar-link" data-bs-toggle="tooltip" title="Add New School"><i class="bi bi-plus-circle"></i><span class="sidebar-label">Add New School</span></a>
+                </div>
+
                 <!-- Academics -->
                 <div>
                     <p class="text-uppercase small fw-bold text-gray-500 px-2 mt-2 mb-2">Academics</p>
@@ -76,14 +83,6 @@
                     <a href="/Dashboard/admin/inquiries.aspx" class="sidebar-link" data-bs-toggle="tooltip" title="Inquiries"><i class="bi bi-clipboard-check"></i><span class="sidebar-label">Inquiries</span></a>
                     <a href="/Dashboard/admin/inquiry-followups.aspx" class="sidebar-link" data-bs-toggle="tooltip" title="Follow-ups"><i class="bi bi-telephone"></i><span class="sidebar-label">Follow-ups</span></a>
                     <a href="/Dashboard/admin/inquiry-conversion-report.aspx" class="sidebar-link" data-bs-toggle="tooltip" title="Conversion Report"><i class="bi bi-graph-up"></i><span class="sidebar-label">Conversion Report</span></a>
-                </div>
-
-                <!-- Administration -->
-                <div>
-                    <p class="text-uppercase small fw-bold text-gray-500 px-2 mt-2 mb-2">Administration</p>
-                    <a href="manage-users.aspx" class="sidebar-link" data-bs-toggle="tooltip" title="Manage Users"><i class="bi bi-person-gear"></i><span class="sidebar-label">User Management</span></a>
-                    <a href="roles-permissions.aspx" class="sidebar-link" data-bs-toggle="tooltip" title="Role & Permissions"><i class="bi bi-shield-lock"></i><span class="sidebar-label">Roles & Permissions</span></a>
-                    <a href="library.aspx" class="sidebar-link" data-bs-toggle="tooltip" title="Library"><i class="bi bi-bookshelf"></i><span class="sidebar-label">Library</span></a>
                 </div>
 
                 <!-- Finance -->
@@ -109,18 +108,26 @@
                     <a href="reports-finance.aspx" class="sidebar-link" data-bs-toggle="tooltip" title="Finance Reports"><i class="bi bi-graph-up"></i><span class="sidebar-label">Finance</span></a>
                 </div>
 
-                <!-- Master -->
+                <!-- Masters -->
                 <div>
                     <p class="text-uppercase small fw-bold text-gray-500 px-2 mt-2 mb-2">Masters</p>
-                    <a href="/Dashboard/admin/academic-years.aspx" class="sidebar-link">
+                    <a href="/Dashboard/admin/academic-years.aspx" class="sidebar-link" data-bs-toggle="tooltip" title="Academic Years">
                         <i class="bi bi-calendar3"></i><span class="sidebar-label">Academic Years</span>
                     </a>
-                    <a href="/Dashboard/admin/streams.aspx" class="sidebar-link">
+                    <a href="/Dashboard/admin/streams.aspx" class="sidebar-link" data-bs-toggle="tooltip" title="Streams">
                         <i class="bi bi-diagram-3"></i><span class="sidebar-label">Streams</span>
                     </a>
-                    <a href="/Dashboard/admin/rooms.aspx" class="sidebar-link">
+                    <a href="/Dashboard/admin/rooms.aspx" class="sidebar-link" data-bs-toggle="tooltip" title="Rooms">
                         <i class="bi bi-door-open"></i><span class="sidebar-label">Rooms</span>
                     </a>
+                </div>
+
+                <!-- Administration -->
+                <div>
+                    <p class="text-uppercase small fw-bold text-gray-500 px-2 mt-2 mb-2">Administration</p>
+                    <a href="manage-users.aspx" class="sidebar-link" data-bs-toggle="tooltip" title="Manage Users"><i class="bi bi-person-gear"></i><span class="sidebar-label">User Management</span></a>
+                    <a href="roles-permissions.aspx" class="sidebar-link" data-bs-toggle="tooltip" title="Role & Permissions"><i class="bi bi-shield-lock"></i><span class="sidebar-label">Roles & Permissions</span></a>
+                    <a href="library.aspx" class="sidebar-link" data-bs-toggle="tooltip" title="Library"><i class="bi bi-bookshelf"></i><span class="sidebar-label">Library</span></a>
                 </div>
 
                 <!-- System -->

@@ -6,251 +6,303 @@
 
 <asp:Content ID="Content3" ContentPlaceHolderID="pageTitle" runat="server">
     <div>
-        <h1 class="text-xl font-bold text-gray-800">Dashboard</h1>
-        <div class="text-sm text-gray-500">Last updated: <asp:Label ID="lblLastUpdated" runat="server" Text="--"></asp:Label></div>
+        <h1 class="h4 mb-0 text-dark">Dashboard</h1>
+        <div class="small text-muted">Welcome back, <asp:Label ID="lblTeacherName" runat="server" Text="Teacher"></asp:Label></div>
     </div>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 
-    <!-- Welcome Banner -->
-    <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-lg p-6 mb-6 text-white">
-        <h2 class="text-2xl font-bold mb-2">Welcome back, <asp:Label ID="lblTeacherName" runat="server" Text="Teacher"></asp:Label>!</h2>
-        <p class="opacity-90">Here's an overview of your classes and activities for today.</p>
+    <!-- Date Range Filter (matches admin) -->
+    <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-2 mb-3">
+        <div class="text-muted small">
+            <i class="bi bi-calendar3 me-1"></i><%= DateTime.Now.ToString("dddd, MMMM dd, yyyy") %>
+        </div>
+        <div class="btn-group" role="group" aria-label="Dashboard range">
+            <button type="button" class="btn btn-outline-secondary btn-sm active" data-range="today">Today</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-range="week">This Week</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-range="month">This Month</button>
+        </div>
     </div>
 
-    <!-- Stats Cards Row -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <!-- Stats Cards (matches admin pattern) -->
+    <div class="row g-4 mb-4">
 
         <!-- Today's Classes -->
-        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-green-500">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-500 text-sm">Today's Classes</p>
-                    <h3 class="text-2xl font-bold text-gray-800">
-                        <asp:Label ID="lblTodaysClasses" runat="server" Text="--"></asp:Label>
-                    </h3>
-                </div>
-                <div class="bg-green-100 p-3 rounded-full">
-                    <i class="bi bi-calendar3 text-2xl text-green-600"></i>
+        <div class="col-md-6 col-xl-3">
+            <div class="card shadow-sm stat-card border-0 h-100" style="--accent-color: #16a34a">
+                <div class="card-body d-flex align-items-center p-3">
+                    <div class="icon-bg bg-success bg-opacity-10 me-3">
+                        <i class="bi bi-calendar3 fs-2 text-success"></i>
+                    </div>
+                    <div>
+                        <p class="text-muted mb-1">Today's Classes</p>
+                        <h3 class="stat-value mb-0">
+                            <asp:Label ID="lblTodaysClasses" runat="server">--</asp:Label>
+                        </h3>
+                        <span class="stat-sub text-muted">Scheduled</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Total Students -->
-        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-blue-500">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-500 text-sm">My Students</p>
-                    <h3 class="text-2xl font-bold text-gray-800">
-                        <asp:Label ID="lblTotalStudents" runat="server" Text="--"></asp:Label>
-                    </h3>
-                </div>
-                <div class="bg-blue-100 p-3 rounded-full">
-                    <i class="bi bi-people-fill text-2xl text-blue-600"></i>
+        <!-- My Students -->
+        <div class="col-md-6 col-xl-3">
+            <div class="card shadow-sm stat-card border-0 h-100" style="--accent-color: #0d6efd">
+                <div class="card-body d-flex align-items-center p-3">
+                    <div class="icon-bg bg-primary bg-opacity-10 me-3">
+                        <i class="bi bi-people-fill fs-2 text-primary"></i>
+                    </div>
+                    <div>
+                        <p class="text-muted mb-1">My Students</p>
+                        <h3 class="stat-value mb-0">
+                            <asp:Label ID="lblTotalStudents" runat="server">--</asp:Label>
+                        </h3>
+                        <span class="stat-sub text-muted">Total</span>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Attendance Today -->
-        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-yellow-500">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-500 text-sm">Attendance Today</p>
-                    <h3 class="text-2xl font-bold text-gray-800">
-                        <asp:Label ID="lblAttendancePercent" runat="server" Text="--"></asp:Label>%
-                    </h3>
-                    <p class="text-xs text-gray-400">
-                        <asp:Label ID="lblPresentToday" runat="server" Text="0"></asp:Label> present / 
-                        <asp:Label ID="lblAbsentToday" runat="server" Text="0"></asp:Label> absent
-                    </p>
-                </div>
-                <div class="bg-yellow-100 p-3 rounded-full">
-                    <i class="bi bi-clipboard-check text-2xl text-yellow-600"></i>
+        <div class="col-md-6 col-xl-3">
+            <div class="card shadow-sm stat-card border-0 h-100" style="--accent-color: #ffc107">
+                <div class="card-body d-flex align-items-center p-3">
+                    <div class="icon-bg bg-warning bg-opacity-10 me-3">
+                        <i class="bi bi-clipboard-check fs-2 text-warning"></i>
+                    </div>
+                    <div>
+                        <p class="text-muted mb-1">Attendance Today</p>
+                        <h3 class="stat-value mb-0">
+                            <asp:Label ID="lblAttendancePercent" runat="server">--</asp:Label>%
+                        </h3>
+                        <span class="stat-sub">
+                            <span class="text-success"><asp:Label ID="lblPresentToday" runat="server">0</asp:Label> present</span> · 
+                            <span class="text-danger"><asp:Label ID="lblAbsentToday" runat="server">0</asp:Label> absent</span>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Upcoming Exams -->
-        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-red-500">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-500 text-sm">Upcoming Exams</p>
-                    <h3 class="text-2xl font-bold text-gray-800">
-                        <asp:Label ID="lblUpcomingExams" runat="server" Text="--"></asp:Label>
-                    </h3>
-                </div>
-                <div class="bg-red-100 p-3 rounded-full">
-                    <i class="bi bi-pencil-square text-2xl text-red-600"></i>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Main Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-
-        <!-- Today's Schedule -->
-        <div class="lg:col-span-2 bg-white rounded-lg shadow">
-            <div class="p-4 border-b flex items-center justify-between">
-                <h3 class="font-semibold text-gray-800">
-                    <i class="bi bi-clock-history text-green-600 mr-2"></i>Today's Schedule
-                </h3>
-                <span class="text-sm text-gray-500"><%= DateTime.Now.ToString("dddd, MMMM dd") %></span>
-            </div>
-            <div class="p-4">
-                <asp:Repeater ID="rptTodaysClasses" runat="server">
-                    <ItemTemplate>
-                        <div class="flex items-center gap-4 p-3 hover:bg-gray-50 rounded-lg border-b last:border-b-0">
-                            <div class="bg-green-100 text-green-700 font-bold rounded-lg px-3 py-2 text-center min-w-16">
-                                <div class="text-xs">Period</div>
-                                <div class="text-lg"><%# Eval("periodNo") %></div>
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-semibold text-gray-800"><%# Eval("subjectName") %></h4>
-                                <p class="text-sm text-gray-500"><%# Eval("className") %> <%# Eval("section") %></p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm font-medium text-gray-700"><%# Eval("startTime") %> - <%# Eval("endTime") %></p>
-                                <p class="text-xs text-gray-400">Room: <%# Eval("roomNo") ?? "TBD" %></p>
-                            </div>
-                        </div>
-                    </ItemTemplate>
-                </asp:Repeater>
-                <asp:Panel ID="pnlNoClasses" runat="server" Visible="false" CssClass="text-center py-8 text-gray-500">
-                    <i class="bi bi-calendar-x text-4xl mb-2"></i>
-                    <p>No classes scheduled for today.</p>
-                </asp:Panel>
-            </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="bg-white rounded-lg shadow">
-            <div class="p-4 border-b">
-                <h3 class="font-semibold text-gray-800">
-                    <i class="bi bi-lightning-charge-fill text-yellow-500 mr-2"></i>Quick Actions
-                </h3>
-            </div>
-            <div class="p-4 space-y-3">
-                <a href="attendance.aspx" class="flex items-center gap-3 p-3 bg-green-50 hover:bg-green-100 rounded-lg transition">
-                    <i class="bi bi-clipboard-check text-green-600 text-xl"></i>
-                    <span class="font-medium text-gray-700">Mark Attendance</span>
-                </a>
-                <a href="assignments.aspx" class="flex items-center gap-3 p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition">
-                    <i class="bi bi-journal-text text-blue-600 text-xl"></i>
-                    <span class="font-medium text-gray-700">Create Assignment</span>
-                </a>
-                <a href="exam-results.aspx" class="flex items-center gap-3 p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition">
-                    <i class="bi bi-pencil-square text-purple-600 text-xl"></i>
-                    <span class="font-medium text-gray-700">Enter Exam Marks</span>
-                </a>
-                <a href="student-performance.aspx" class="flex items-center gap-3 p-3 bg-orange-50 hover:bg-orange-100 rounded-lg transition">
-                    <i class="bi bi-bar-chart-line text-orange-600 text-xl"></i>
-                    <span class="font-medium text-gray-700">View Performance</span>
-                </a>
-                <a href="messages.aspx" class="flex items-center gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition">
-                    <i class="bi bi-chat-dots text-gray-600 text-xl"></i>
-                    <span class="font-medium text-gray-700">Send Message</span>
-                </a>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Second Row -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-
-        <!-- Attendance Summary by Class -->
-        <div class="bg-white rounded-lg shadow">
-            <div class="p-4 border-b">
-                <h3 class="font-semibold text-gray-800">
-                    <i class="bi bi-pie-chart-fill text-blue-600 mr-2"></i>Class Attendance Summary
-                </h3>
-            </div>
-            <div class="p-4">
-                <asp:Repeater ID="rptAttendanceSummary" runat="server">
-                    <ItemTemplate>
-                        <div class="mb-4 last:mb-0">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-sm font-medium text-gray-700"><%# Eval("className") %></span>
-                                <span class="text-sm text-gray-500"><%# Eval("presentCount") %>/<%# Eval("totalStudents") %> present</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-green-500 h-2 rounded-full" style='width: <%# Eval("attendancePercentage") ?? "0" %>%'></div>
-                            </div>
-                        </div>
-                    </ItemTemplate>
-                </asp:Repeater>
-                <asp:Panel ID="pnlNoAttendance" runat="server" Visible="false" CssClass="text-center py-6 text-gray-500">
-                    <i class="bi bi-clipboard text-3xl mb-2"></i>
-                    <p>No attendance data for today.</p>
-                </asp:Panel>
-            </div>
-        </div>
-
-        <!-- Upcoming Exams List -->
-        <div class="bg-white rounded-lg shadow">
-            <div class="p-4 border-b flex items-center justify-between">
-                <h3 class="font-semibold text-gray-800">
-                    <i class="bi bi-calendar-event text-red-600 mr-2"></i>Upcoming Exams
-                </h3>
-                <a href="create-exam.aspx" class="text-sm text-green-600 hover:underline">View All</a>
-            </div>
-            <div class="p-4">
-                <asp:Repeater ID="rptUpcomingExams" runat="server">
-                    <ItemTemplate>
-                        <div class="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg border-b last:border-b-0">
-                            <div class="bg-red-100 text-red-700 rounded-lg px-3 py-2 text-center">
-                                <div class="text-xs"><%# Convert.ToDateTime(Eval("examDate")).ToString("MMM") %></div>
-                                <div class="text-lg font-bold"><%# Convert.ToDateTime(Eval("examDate")).ToString("dd") %></div>
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-semibold text-gray-800"><%# Eval("examName") %></h4>
-                                <p class="text-sm text-gray-500"><%# Eval("subjectName") %> - <%# Eval("className") %></p>
-                            </div>
-                            <div class="text-right text-sm text-gray-500">
-                                <%# Eval("maxMarks") %> marks
-                            </div>
-                        </div>
-                    </ItemTemplate>
-                </asp:Repeater>
-                <asp:Panel ID="pnlNoExams" runat="server" Visible="false" CssClass="text-center py-6 text-gray-500">
-                    <i class="bi bi-calendar-x text-3xl mb-2"></i>
-                    <p>No upcoming exams in the next 30 days.</p>
-                </asp:Panel>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Recent Notices -->
-    <div class="bg-white rounded-lg shadow">
-        <div class="p-4 border-b flex items-center justify-between">
-            <h3 class="font-semibold text-gray-800">
-                <i class="bi bi-megaphone-fill text-orange-500 mr-2"></i>Recent Notices
-            </h3>
-            <a href="notifications.aspx" class="text-sm text-green-600 hover:underline">View All</a>
-        </div>
-        <div class="p-4">
-            <asp:Repeater ID="rptNotices" runat="server">
-                <ItemTemplate>
-                    <div class="flex items-start gap-4 p-3 hover:bg-gray-50 rounded-lg border-b last:border-b-0">
-                        <div class="bg-orange-100 p-2 rounded-full">
-                            <i class="bi bi-bell text-orange-600"></i>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="font-semibold text-gray-800"><%# Eval("title") %></h4>
-                            <p class="text-sm text-gray-500 line-clamp-2"><%# Eval("description") %></p>
-                            <p class="text-xs text-gray-400 mt-1"><%# Eval("publishDate") %></p>
-                        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card shadow-sm stat-card border-0 h-100" style="--accent-color: #dc3545">
+                <div class="card-body d-flex align-items-center p-3">
+                    <div class="icon-bg bg-danger bg-opacity-10 me-3">
+                        <i class="bi bi-pencil-square fs-2 text-danger"></i>
                     </div>
-                </ItemTemplate>
-            </asp:Repeater>
-            <asp:Panel ID="pnlNoNotices" runat="server" Visible="false" CssClass="text-center py-6 text-gray-500">
-                <i class="bi bi-bell-slash text-3xl mb-2"></i>
-                <p>No recent notices.</p>
-            </asp:Panel>
+                    <div>
+                        <p class="text-muted mb-1">Upcoming Exams</p>
+                        <h3 class="stat-value mb-0">
+                            <asp:Label ID="lblUpcomingExams" runat="server">--</asp:Label>
+                        </h3>
+                        <span class="stat-sub text-muted">Next 30 days</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Quick Actions & Attention Needed (matches admin) -->
+    <div class="row g-4 mb-4">
+        <!-- Quick Actions -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h6 class="fw-bold mb-0">
+                            <i class="bi bi-lightning-charge-fill text-warning me-2"></i>Quick Actions
+                        </h6>
+                        <span class="badge bg-light text-muted border">Shortcuts</span>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <a class="btn btn-success btn-sm" href="attendance.aspx"><i class="bi bi-clipboard-check me-1"></i>Mark Attendance</a>
+                        <a class="btn btn-primary btn-sm" href="assignments.aspx"><i class="bi bi-journal-text me-1"></i>Create Assignment</a>
+                        <a class="btn btn-outline-success btn-sm" href="exam-results.aspx"><i class="bi bi-pencil-square me-1"></i>Enter Marks</a>
+                        <a class="btn btn-outline-primary btn-sm" href="student-performance.aspx"><i class="bi bi-bar-chart-line me-1"></i>View Performance</a>
+                        <a class="btn btn-outline-secondary btn-sm" href="messages.aspx"><i class="bi bi-chat-dots me-1"></i>Send Message</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attention Needed -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h6 class="fw-bold mb-0">
+                            <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Attention Needed
+                        </h6>
+                        <span class="badge bg-light text-muted border">Priority</span>
+                    </div>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                            <span class="small"><i class="bi bi-clipboard-x me-2 text-warning"></i>Attendance not marked</span>
+                            <span class="badge bg-warning-subtle text-warning-emphasis">2 classes</span>
+                        </li>
+                        <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                            <span class="small"><i class="bi bi-journal-text me-2 text-secondary"></i>Assignments to review</span>
+                            <span class="badge bg-secondary-subtle text-secondary-emphasis">15</span>
+                        </li>
+                        <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                            <span class="small"><i class="bi bi-person-x me-2 text-danger"></i>Low attendance students</span>
+                            <span class="badge bg-danger-subtle text-danger-emphasis">5</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Today's Schedule & Recent Activities (matches admin) -->
+    <div class="row g-4 mb-4">
+        <!-- Today's Schedule -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
+                        <h5 class="card-title fw-bold mb-0">
+                            <i class="bi bi-clock-history text-success me-2"></i>Today's Schedule
+                        </h5>
+                        <span class="badge bg-light text-muted border"><%= DateTime.Now.ToString("dddd") %></span>
+                    </div>
+
+                    <asp:Repeater ID="rptTodaysClasses" runat="server">
+                        <ItemTemplate>
+                            <div class="d-flex align-items-center gap-3 p-3 border-bottom">
+                                <div class="icon-bg-sm bg-success bg-opacity-10 d-flex align-items-center justify-content-center">
+                                    <span class="fw-bold text-success small">P<%# Eval("periodNo") %></span>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="fw-semibold"><%# Eval("subjectName") %></div>
+                                    <div class="text-muted small"><%# Eval("className") %> <%# Eval("section") %></div>
+                                </div>
+                                <div class="text-end">
+                                    <div class="small fw-medium"><%# Eval("startTime") %> - <%# Eval("endTime") %></div>
+                                    <div class="text-muted small">Room: <%# Eval("roomNo") ?? "TBD" %></div>
+                                </div>
+                            </div>
+                        </ItemTemplate>
+                    </asp:Repeater>
+
+                    <asp:Panel ID="pnlNoClasses" runat="server" Visible="false" CssClass="text-center py-5 text-muted">
+                        <i class="bi bi-calendar-x fs-1 mb-2 d-block"></i>
+                        <p class="mb-0">No classes scheduled for today.</p>
+                    </asp:Panel>
+                </div>
+            </div>
+        </div>
+
+        <!-- Class Attendance Summary -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
+                        <h5 class="card-title fw-bold mb-0">
+                            <i class="bi bi-pie-chart-fill text-primary me-2"></i>Attendance Summary
+                        </h5>
+                        <span class="badge bg-light text-muted border">By Class</span>
+                    </div>
+
+                    <asp:Repeater ID="rptAttendanceSummary" runat="server">
+                        <ItemTemplate>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="small fw-medium"><%# Eval("className") %></span>
+                                    <span class="small text-muted">
+                                        <span class="text-success fw-semibold"><%# Eval("presentCount") %></span>/<%# Eval("totalStudents") %>
+                                    </span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style='width: <%# Eval("attendancePercentage") ?? "0" %>%'></div>
+                                </div>
+                            </div>
+                        </ItemTemplate>
+                    </asp:Repeater>
+
+                    <asp:Panel ID="pnlNoAttendance" runat="server" Visible="false" CssClass="text-center py-4 text-muted">
+                        <i class="bi bi-clipboard fs-2 mb-2 d-block"></i>
+                        <p class="mb-0 small">No attendance data for today.</p>
+                    </asp:Panel>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Exams & Recent Notices -->
+    <div class="row g-4">
+        <!-- Upcoming Exams -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
+                        <h5 class="card-title fw-bold mb-0">
+                            <i class="bi bi-calendar-event-fill text-danger me-2"></i>Upcoming Exams
+                        </h5>
+                        <a href="create-exam.aspx" class="btn btn-outline-success btn-sm">View all</a>
+                    </div>
+
+                    <asp:Repeater ID="rptUpcomingExams" runat="server">
+                        <ItemTemplate>
+                            <div class="d-flex align-items-center gap-3 p-3 border-bottom">
+                                <div class="bg-danger bg-opacity-10 rounded px-2 py-1 text-center" style="min-width: 50px;">
+                                    <div class="small text-danger text-uppercase"><%# Convert.ToDateTime(Eval("examDate")).ToString("MMM") %></div>
+                                    <div class="fw-bold text-danger"><%# Convert.ToDateTime(Eval("examDate")).ToString("dd") %></div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="fw-semibold"><%# Eval("examName") %></div>
+                                    <div class="text-muted small"><%# Eval("subjectName") %> · <%# Eval("className") %></div>
+                                </div>
+                                <span class="badge bg-light text-muted border"><%# Eval("maxMarks") %> marks</span>
+                            </div>
+                        </ItemTemplate>
+                    </asp:Repeater>
+
+                    <asp:Panel ID="pnlNoExams" runat="server" Visible="false" CssClass="text-center py-4 text-muted">
+                        <i class="bi bi-calendar-x fs-2 mb-2 d-block"></i>
+                        <p class="mb-0 small">No upcoming exams.</p>
+                    </asp:Panel>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Notices -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
+                        <h5 class="card-title fw-bold mb-0">
+                            <i class="bi bi-megaphone-fill text-warning me-2"></i>Recent Notices
+                        </h5>
+                        <a href="notifications.aspx" class="btn btn-outline-success btn-sm">View all</a>
+                    </div>
+
+                    <asp:Repeater ID="rptNotices" runat="server">
+                        <ItemTemplate>
+                            <div class="d-flex align-items-start gap-3 p-3 border-bottom">
+                                <div class="icon-bg-sm bg-warning bg-opacity-10 d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-bell text-warning"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="fw-semibold"><%# Eval("title") %></div>
+                                    <div class="text-muted small text-truncate" style="max-width: 300px;"><%# Eval("description") %></div>
+                                    <div class="text-muted small mt-1"><%# Eval("publishDate") %></div>
+                                </div>
+                            </div>
+                        </ItemTemplate>
+                    </asp:Repeater>
+
+                    <asp:Panel ID="pnlNoNotices" runat="server" Visible="false" CssClass="text-center py-4 text-muted">
+                        <i class="bi bi-bell-slash fs-2 mb-2 d-block"></i>
+                        <p class="mb-0 small">No recent notices.</p>
+                    </asp:Panel>
+                </div>
+            </div>
         </div>
     </div>
 

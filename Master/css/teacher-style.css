@@ -1,47 +1,250 @@
-﻿/* Sidebar */
+﻿/* --- Teacher Theme (follows admin pattern with green accents) --- */
 :root {
-    --sidebar-w: 16rem;
-    --sidebar-w-collapsed: 5rem;
+    --sidebar-w: 15.70rem; /* 235px - matches admin */
+    --sidebar-w-collapsed: 6rem; /* 80px - matches admin */
+    --accent-color: #16a34a; /* green-600 */
+    --accent-light: #dcfce7; /* green-100 */
+    --accent-dark: #15803d; /* green-700 */
 }
 
-.app-sidebar {
-    width: var(--sidebar-w);
+body:not(.sidebar-collapsed) .tooltip {
+    display: none !important;
+}
+
+body {
+    background-color: #f9fafb; /* gray-50 */
 }
 
 .app-main {
     margin-left: var(--sidebar-w);
+    transition: margin-left 0.35s ease;
 }
 
-/* Scrollbar */
+.app-sidebar {
+    width: var(--sidebar-w);
+    z-index: 50;
+    transition: width 0.35s ease;
+}
+
+.sidebar-collapsed .app-main {
+    margin-left: var(--sidebar-w-collapsed);
+}
+
+.sidebar-collapsed .app-sidebar {
+    width: var(--sidebar-w-collapsed);
+}
+
+.sidebar-collapsed .sidebar-label,
+.sidebar-collapsed .text-gray-500 {
+    display: none;
+}
+
+/* Sidebar links - matches admin */
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.9rem;
+    border-radius: 0.5rem;
+    color: #111827; /* gray-900 */
+    text-decoration: none;
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    border-left: 4px solid transparent;
+}
+
+.sidebar-link:hover {
+    background-color: #f3f4f6; /* gray-100 */
+}
+
+.sidebar-link i {
+    font-size: 1.15rem;
+    color: #4b5563; /* gray-600 */
+}
+
+.sidebar-link.active {
+    background-color: var(--accent-light); /* green-100 */
+    border-left: 4px solid var(--accent-color); /* green-600 */
+    color: #111827;
+}
+
+.sidebar-link.active i {
+    color: var(--accent-dark); /* green-700 */
+}
+
+/* Sidebar sections - matches admin */
+.app-sidebar nav > div {
+    margin-top: 1rem;
+}
+
+.app-sidebar nav > div:not(:first-child) {
+    border-top: 1px solid #e5e7eb; /* gray-200 */
+    padding-top: 0.75rem;
+}
+
+.app-sidebar nav p.text-gray-500 {
+    color: #6b7280 !important; /* gray-500 */
+    letter-spacing: 0.08em;
+}
+
+/* Scrollbar - matches admin */
 .app-sidebar nav::-webkit-scrollbar {
     width: 6px;
 }
 
 .app-sidebar nav::-webkit-scrollbar-thumb {
-    background: #4b5563; /* gray-600 */
+    background: #cccccc88;
     border-radius: 4px;
 }
 
-/* Collapse hide labels */
-body.sidebar-collapsed .sidebar-label {
+/* --- Mobile Sidebar --- */
+@media (max-width: 767px) {
+    .app-main {
+        margin-left: 0;
+    }
+
+    .app-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .app-sidebar.is-open {
+        transform: translateX(0);
+    }
+}
+
+/* Utility class */
+.hidden {
     display: none;
 }
 
-/* Active link */
-.sidebar-link.active {
-    background-color: #166534; /* green */
+/* --- Dashboard Cards (matches admin stat-card pattern) --- */
+.stat-card {
+    position: relative;
+    border: 1px solid #e9ecef;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.stat-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--accent-color);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Icon backgrounds - matches admin */
+.icon-bg {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05), 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.icon-bg-sm {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+}
+
+/* Stat values - matches admin */
+.stat-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.stat-sub {
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* --- Teacher-specific color classes --- */
+.bg-teacher {
+    background-color: var(--accent-color) !important;
+}
+
+.bg-teacher-light {
+    background-color: var(--accent-light) !important;
+}
+
+.text-teacher {
+    color: var(--accent-color) !important;
+}
+
+.border-teacher {
+    border-color: var(--accent-color) !important;
+}
+
+/* --- Utility classes (matches admin) --- */
+.page-subtitle {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.table-wrap {
+    border: 1px solid rgba(0,0,0,.06);
+    border-radius: .75rem;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.kpi {
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,.06);
+    border-radius: .9rem;
+    padding: .9rem;
+}
+
+.kpi .value {
+    font-weight: 800;
+}
+
+.kpi .label {
+    font-size: .78rem;
+    color: #6c757d;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+}
+
+/* Quick action buttons */
+.btn-teacher {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
     color: #fff;
 }
 
-    .sidebar-link.active i {
-        color: #fff;
-    }
-
-/* Submenu animation */
-.submenu .submenu-items {
-    overflow: hidden;
+.btn-teacher:hover {
+    background-color: var(--accent-dark);
+    border-color: var(--accent-dark);
+    color: #fff;
 }
 
-.submenu-btn .submenu-icon {
-    transition: transform 0.3s;
+.btn-outline-teacher {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.btn-outline-teacher:hover {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #fff;
+}
+
+/* Required field marker */
+.required::after {
+    content: " *";
+    color: #dc3545;
+    font-weight: 700;
 }
